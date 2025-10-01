@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, screen } = require('electron')
 // const express = require('express')
 const path = require('path')
 const mqtt = require('mqtt')
@@ -9,7 +9,33 @@ console.log('Current user:', username)
 
 
 let win
+let windows = []
 
+function createWindows() {
+  const displays = screen.getAllDisplays()
+
+  displays.forEach((display) => {
+    const win = new BrowserWindow({
+      x: display.bounds.x,
+      y: display.bounds.y,
+      width: display.bounds.width,
+      height: display.bounds.height,
+      transparent: true,
+      frame: false,
+      alwaysOnTop: true,
+      skipTaskbar: true,
+      fullscreen: false,          // use bounds instead
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    })
+    
+    win.setIgnoreMouseEvents(true)
+    win.loadFile('index.html')
+    windows.push(win)
+  })
+}
 function createWindow() {
     win = new BrowserWindow({
         width: 800,
@@ -31,9 +57,12 @@ function createWindow() {
 
 
 app.whenReady().then(() => {
-    createWindow()
-    win.webContents.on('did-finish-load', () => {
-        win.webContents.send('launch-confetti')
+    // createWindow()
+    createWindows()
+    windows.forEach(w => {
+        w.webContents.on('did-finish-load', () => {
+            w.webContents.send('launch-confetti')
+        })
     })
     
     // MQTT connection (TLS, port 8883)
@@ -61,7 +90,12 @@ app.whenReady().then(() => {
     client.on('message', (t, message) => {
       if (t === topic) {
         console.log('Confetti trigger received')
-        if (win) win.webContents.send('launch-confetti')
+        // if (win) win.webContents.send('launch-confetti')
+        windows.forEach(w => {
+            if (w && !w.isDestroyed()) {
+                w.webContents.send('launch-confetti')
+            }
+        })
       }
     })
 

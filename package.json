@@ -1,6 +1,6 @@
 {
   "name": "jira-confetti",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Jeremiah Fischer <jfischer@fargohope.org>",
   "description": "Desktop app to trigger confetti for Jira events",
   "main": "main.js",

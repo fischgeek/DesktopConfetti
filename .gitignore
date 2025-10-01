@@ -1,0 +1,4 @@
+node_modules/*
+dist/*
+mqtt_config.js
+package-lock.json

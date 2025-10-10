@@ -3,16 +3,21 @@ const confettiLib = require('canvas-confetti')
 let myConfetti
 let customShapes = {}
 
+// const defaultConfig = {
+//     bursts: 3,
+//     particleCount: 100,
+//     spread: 100,
+//     gravity: 0.8,
+//     shapes: ['circle', 'square'],
+//     decay: 0.9,
+//     scalar: 1.2,
+//     angle: 90,
+//     ticks: 200,
+// }
 const defaultConfig = {
-    bursts: 3,
     particleCount: 100,
-    spread: 100,
-    gravity: 0.8,
-    shapes: ['circle', 'square'],
-    decay: 0.9,
-    scalar: 1.2,
-    angle: 90,
-    ticks: 200,
+    spread: 70,
+    origin: { y: 0.6 }
 }
 
 function initConfetti(canvas) {

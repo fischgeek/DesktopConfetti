@@ -15,7 +15,7 @@ function setupMqtt(windows, usr) {
     rejectUnauthorized: true
   })
 
-  const topic = `confetti/${username}`
+  const topic = `confetti/${usr}`
 
   client.on('connect', () => {
     console.log(`Connected to ${mqttConfig.host}. Subscribing to topic:`, topic)

@@ -12,6 +12,7 @@
     <canvas id="confetti-canvas"></canvas>
     <script>
         const { ipcRenderer } = require('electron')
+        const { startConfetti, stopConfetti } = require('./confetti.js')
         const canvas = document.getElementById('confetti-canvas')
         const myConfetti = confetti.create(canvas, { resize: true, useWorker: true })
 
@@ -66,6 +67,9 @@
             }
         }
 
+        ipcRenderer.on('launch-confetti', (event, options) => {
+            startConfetti(options)
+        })
         ipcRenderer.on('launch-confetti', (_, options) => {
             const confettiOptions = {...defaultConfig, ...options}
             if (Array.isArray(confettiOptions.shapes)) {

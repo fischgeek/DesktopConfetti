@@ -1,5 +1,6 @@
 const { app, BrowserWindow, screen, Tray, Menu, ipcMain } = require('electron')
 // const express = require('express')
+const { setupTray } = require('./tray')
 const path = require('path')
 const { setupMqtt } = require('./mqtt.js')
 // const mqtt = require('mqtt')
@@ -37,21 +38,10 @@ function createWindows() {
   })
 }
 
+
 app.whenReady().then(() => {
-  tray = new Tray('confetti.png')
-  const contextMenu = Menu.buildFromTemplate([
-  {
-    label: 'Fire Confetti',
-    click: () => 
-      windows.forEach(w => {
-        w.webContents.send('launch-confetti')
-      })
-    },
-    { label: 'Quit', click: () => app.quit() }
-  ])
-  tray.setToolTip('Confetti App')
-  tray.setContextMenu(contextMenu)
   createWindows()
+  tray = setupTray(windows)
   windows.forEach(w => {
     w.webContents.on('did-finish-load', () => {
       w.webContents.send('launch-confetti')

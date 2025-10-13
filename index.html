@@ -30,13 +30,12 @@
     <canvas id="confetti-canvas"></canvas>
     <script>
         const { ipcRenderer } = require('electron')
-        const { initConfetti, startConfetti } = require('./confetti.js')
+        const { initConfetti, launchConfetti } = require('./confetti.js')
 
         const canvas = document.getElementById('confetti-canvas')
         initConfetti(canvas)
 
-        ipcRenderer.on('launch-confetti', (_, options) => startConfetti(options))
-        ipcRenderer.on('confetti-fire', () => startConfetti())
+        ipcRenderer.on('launch-confetti', (_, options) => launchConfetti(options))
     </script>
 </body>
 

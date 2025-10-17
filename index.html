@@ -34,6 +34,7 @@
 
         const canvas = document.getElementById('confetti-canvas')
         initConfetti(canvas)
+        launchConfetti()
 
         ipcRenderer.on('launch-confetti', (_, options) => launchConfetti(options))
     </script>

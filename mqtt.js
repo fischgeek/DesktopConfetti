@@ -43,6 +43,7 @@ function setupMqtt(windows, usr) {
 
     windows.forEach(w => {
       if (w && !w.isDestroyed()) {
+        console.log('Sending launch-confetti to window with options:', confettiOptions)
         w.webContents.send('launch-confetti', confettiOptions)
       }
     })

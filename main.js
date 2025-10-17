@@ -24,13 +24,13 @@ function createWindows() {
       frame: false,
       alwaysOnTop: true,
       skipTaskbar: true,
-      fullscreen: true,          
+      fullscreen: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
       }
     })
-    
+    // win.webContents.openDevTools()
     win.setAlwaysOnTop(true, 'screen-saver')
     win.setIgnoreMouseEvents(true)
     win.loadFile('index.html')
@@ -44,9 +44,11 @@ app.whenReady().then(() => {
   tray = setupTray(windows)
   windows.forEach(w => {
     w.webContents.on('did-finish-load', () => {
+      console.log('Window finished loading, sending initial launch-confetti')
       w.webContents.send('launch-confetti')
+      console.log('Initial launch-confetti sent')
     })
   })
   setupMqtt(windows, username)
-  setupMqttPublic(windows, username)
+  // setupMqttPublic(windows, username)
 })

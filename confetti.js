@@ -20,79 +20,42 @@ function initConfetti(canvas) {
     const unicorn = confettiLib.shapeFromText({ text: '\uD83E\uDD84' })
     const cloud = confettiLib.shapeFromText({ text: '⛅' })
     const partyPopper = confettiLib.shapeFromText({ text: '\uD83C\uDF89' })
-    customShapes = { pumpkin, unicorn, cloud, partyPopper }
+    customShapes = { unicorn, cloud, partyPopper }
 }
 
-function resolveRandomValues(obj) {
-    const resolved = {}
-    for (const key in obj) {
-        const val = obj[key]
-        if (val && typeof val === 'object' && typeof val.min === 'number' && typeof val.max === 'number') {
-            resolved[key] = Math.random() * (val.max - val.min) + val.min
-        } else {
-            resolved[key] = val
+function parseShapes(shapes) {
+    if (!Array.isArray(shapes)) return shapes
+    return shapes.map(s => {
+        if (/^emoji:/.test(s)) {
+            const emoji = s.replace(/^emoji:/, '')
+            return confettiLib.shapeFromText({ text: emoji })
         }
-    }
-    return resolved
-}
-
-function fireConfettiSequence(config) {
-    const count = config.count || 200
-    const defaults = config.defaults || {}
-    if (!Array.isArray(config.fires)) return
-
-    config.fires.forEach(fire => {
-        const particleCount = Math.floor(count * (fire.particleRatio || 1))
-        const resolvedOpts = resolveRandomValues(fire.opts || {})
-
-        // Parse shapes for emojis
-        if (Array.isArray(resolvedOpts.shapes)) {
-            resolvedOpts.shapes = resolvedOpts.shapes.map(s => {
-                if (customShapes[s]) return customShapes[s]
-                if (/^emoji:/.test(s)) {
-                    const emoji = s.replace(/^emoji:/, '')
-                    return confettiLib.shapeFromText({ text: emoji })
-                }
-                return s
-            })
-        }
-
-        myConfetti({
-            ...defaults,
-            ...resolvedOpts,
-            particleCount
-        })
+        return s
     })
 }
 
-function launchConfetti(customOptions = {}) {
+function launchConfetti(config = {}) {
+    console.log('launchConfetti called with config:', config)
     if (!myConfetti) return
 
-    if (customOptions.mode === 'multi' && Array.isArray(customOptions.fires)) {
-        fireConfettiSequence(customOptions)
-        return
+    console.log('Launching confetti with config:', config)
+
+    const fire = conf => {
+        const parsed = { ...defaultConfetti, ...conf }
+        if (Array.isArray(parsed.shapes)) parsed.shapes = parseShapes(parsed.shapes)
+        console.log('go')
+        myConfetti(parsed)
+        console.log('Confetti fired with config:', parsed)
     }
 
-    const config = { ...defaultConfetti, ...customOptions }
-    if (Array.isArray(config.shapes)) {
-        config.shapes = config.shapes.map(s => {
-            if (customShapes[s]) return customShapes[s]
-            if (/^emoji:/.test(s)) {
-                const emoji = s.replace(/^emoji:/, '')
-                return confettiLib.shapeFromText({ text: emoji })
-            }
-            return s
-        })
-    }
-    for (let i = 0; i < config.bursts; i++) {
-        setTimeout(() => {
-            myConfetti({
-                ...config,
-                origin: config.origin ||
-                    { x: Math.random(), y: Math.random() * 0.5 }
-            })
-        }, i * (config.burstDelay || 200))
-    }
+    config = { ...defaultConfetti, ...config }
+    if (Array.isArray(config.fires)) {
+        console.log('Multiple fire configs')
+        config.fires.forEach(fire)
+    } else {
+        console.log('Single fire config')
+        fire(config)
+    } 
 }
 
 module.exports = { initConfetti, launchConfetti }

@@ -1,0 +1,41 @@
+{
+    "mode": "multi",
+    "count": 50,
+    "defaults": {
+        "spread": 360,
+        "ticks": 50,
+        "gravity": 0,
+        "decay": 0.94,
+        "startVelocity": 30,
+        "colors": [
+            "FFE400",
+            "FFBD00",
+            "E89400",
+            "FFCA6C",
+            "FDFFB8"
+        ],
+        "bursts": 3
+    },
+    "fires": [
+        {
+            "particleRatio": 0.8,
+            "opts": {
+                "particleCount": 40,
+                "scalar": 1.2,
+                "shapes": [
+                    "star"
+                ]
+            }
+        },
+        {
+            "particleRatio": 0.2,
+            "opts": {
+                "particleCount": 10,
+                "scalar": 0.75,
+                "shapes": [
+                    "circle"
+                ]
+            }
+        }
+    ]
+}

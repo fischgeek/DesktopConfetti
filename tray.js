@@ -1,14 +1,60 @@
-const { Tray, Menu } = require('electron')
+const { app, Tray, Menu } = require('electron')
+const fs = require('fs')
+const path = require('path')
 
 function setupTray(windows) {
-    tray = new Tray('confetti.png')
+    const tray = new Tray('confetti.png')
+
+    // Build Samples submenu from ./samples/*.json
+    const samplesDir = path.join(__dirname, 'samples')
+    let sampleItems = []
+    try {
+        const files = fs
+            .readdirSync(samplesDir)
+            .filter(f => f.toLowerCase().endsWith('.json'))
+
+        const toTitle = (name) => name.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
+        sampleItems = files.map(file => {
+            const label = toTitle(path.basename(file, '.json'))
+            const filePath = path.join(samplesDir, file)
+            return {
+                label,
+                click: () => {
+                    try {
+                        const raw = fs.readFileSync(filePath, 'utf8')
+                        const payload = JSON.parse(raw)
+                        windows.forEach(w => {
+                            if (w && !w.isDestroyed()) {
+                                w.webContents.send('launch-confetti', payload)
+                            }
+                        })
+                    } catch (e) {
+                        console.error('Failed to load sample', filePath, e)
+                    }
+                }
+            }
+        })
+    } catch (e) {
+        console.error('Unable to build Samples menu:', e)
+    }
+
     const contextMenu = Menu.buildFromTemplate([
+        // {
+        //     label: 'Fire Confetti',
+        //     click: () =>
+        //         windows.forEach(w => {
+        //             w.webContents.send('launch-confetti')
+        //         })
+        // },
+        ...(sampleItems.length ? [{ label: 'Confetti', submenu: sampleItems }] : []),
         {
-            label: 'Fire Confetti',
-            click: () =>
-                windows.forEach(w => {
-                    w.webContents.send('launch-confetti')
-                })
+            label: 'Restart App',
+            click: () => {
+                // Relaunch the Electron app with the same arguments
+                app.relaunch()
+                app.exit(0)
+            }
         },
         { label: 'Quit', click: () => app.quit() }
     ])

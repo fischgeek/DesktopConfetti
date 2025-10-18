@@ -1,6 +1,4 @@
 {
-    "mode": "multi",
-    "count": 50,
     "defaults": {
         "spread": 360,
         "ticks": 50,
@@ -13,29 +11,24 @@
             "E89400",
             "FFCA6C",
             "FDFFB8"
-        ],
-        "bursts": 3
+        ]
     },
     "fires": [
         {
-            "particleRatio": 0.8,
-            "opts": {
-                "particleCount": 40,
-                "scalar": 1.2,
-                "shapes": [
-                    "star"
-                ]
-            }
+            "particleCount": 40,
+            "scalar": 1.2,
+            "shapes": [
+                "star"
+            ]
         },
         {
-            "particleRatio": 0.2,
-            "opts": {
-                "particleCount": 10,
-                "scalar": 0.75,
-                "shapes": [
-                    "circle"
-                ]
-            }
+            "particleCount": 10,
+            "scalar": 0.75,
+            "shapes": [
+                "circle"
+            ]
         }
-    ]
+    ],
+    "repeat": 3,
+    "repeatDelay": 100
 }

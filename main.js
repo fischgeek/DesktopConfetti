@@ -30,9 +30,10 @@ function createWindows() {
         contextIsolation: false
       }
     })
-    // win.webContents.openDevTools()
     win.setAlwaysOnTop(true, 'screen-saver')
     win.setIgnoreMouseEvents(true)
+    // win.webContents.openDevTools()
+    // win.setBackgroundColor('black')
     win.loadFile('index.html')
     windows.push(win)
   })

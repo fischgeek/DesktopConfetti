@@ -2,3 +2,12 @@ node_modules/*
 dist/*
 mqtt_config.js
 package-lock.json
+builder-debug.yml
+builder-effective-config.yaml
+*.log
+.env
+*.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

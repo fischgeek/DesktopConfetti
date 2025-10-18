@@ -16,7 +16,12 @@ function createWindows() {
 
   displays.forEach((display) => {
     const getWindowIconPath = () => {
-      const p = path.join(app.getAppPath(), 'assets', 'confetti.png')
+      const file = process.platform === 'win32'
+        ? 'confetti.ico'
+        : process.platform === 'darwin'
+          ? 'confetti.icns'
+          : 'confetti.png'
+      const p = path.join(app.getAppPath(), 'assets', file)
       return p.includes('app.asar') ? p.replace('app.asar', 'app.asar.unpacked') : p
     }
     const win = new BrowserWindow({
@@ -29,7 +34,7 @@ function createWindows() {
       alwaysOnTop: true,
       skipTaskbar: true,
       fullscreen: true,
-      icon: process.platform === 'linux' ? getWindowIconPath() : undefined,
+      icon: getWindowIconPath(),
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
@@ -46,6 +51,10 @@ function createWindows() {
 
 
 app.whenReady().then(() => {
+  // Ensure Windows uses our appId for taskbar grouping and icon
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('com.desktop-confetti')
+  }
   createWindows()
   tray = setupTray(windows)
   windows.forEach(w => {

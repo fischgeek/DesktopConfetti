@@ -15,6 +15,10 @@ function createWindows() {
   const displays = screen.getAllDisplays()
 
   displays.forEach((display) => {
+    const getWindowIconPath = () => {
+      const p = path.join(app.getAppPath(), 'assets', 'confetti.png')
+      return p.includes('app.asar') ? p.replace('app.asar', 'app.asar.unpacked') : p
+    }
     const win = new BrowserWindow({
       x: display.bounds.x,
       y: display.bounds.y,
@@ -25,6 +29,7 @@ function createWindows() {
       alwaysOnTop: true,
       skipTaskbar: true,
       fullscreen: true,
+      icon: process.platform === 'linux' ? getWindowIconPath() : undefined,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false

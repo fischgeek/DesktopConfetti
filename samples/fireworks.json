@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "spread": 360,
+    "ticks": 80,
+    "gravity": 0.5,
+    "decay": 0.92,
+    "startVelocity": 45,
+    "colors": ["#FF4B4B", "#FFD93D", "#6BCB77", "#4D96FF", "#B084CC"]
+  },
+  "fires": [
+    { "particleCount": 70, "scalar": 0.2, "shapes": ["circle"],   "origin": { "x": {"min": 0.15, "max": 0.85}, "y": {"min": 0.10, "max": 0.35} } },
+    { "particleCount": 30, "scalar": 0.2, "shapes": ["circle"], "origin": { "x": {"min": 0.15, "max": 0.85}, "y": {"min": 0.10, "max": 0.35} } }
+  ],
+  "repeat": 8,
+  "repeatDelay": { "min": 150, "max": 600 }
+}

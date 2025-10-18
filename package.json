@@ -1,8 +1,8 @@
 {
-  "name": "jira-confetti",
+  "name": "desktop-confetti",
   "version": "1.0.1",
-  "author": "Jeremiah Fischer <jfischer@fargohope.org>",
-  "description": "Desktop app to trigger confetti for Jira events",
+  "author": "Jeremiah Fischer <fischgeek@gmail.com>",
+  "description": "Desktop app to trigger confetti effects",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -17,10 +17,16 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.hlc.jira-confetti",
-    "productName": "jira-confetti",
+    "asarUnpack": [
+      "assets/**"
+    ],
+    "appId": "com.desktop-confetti",
+    "productName": "DesktopConfetti",
     "files": [
-      "**/*"
+      "**/*",
+      "assets/**",
+      "!**/locales",
+      "!**/locales/**"
     ],
     "win": {
       "target": "nsis"

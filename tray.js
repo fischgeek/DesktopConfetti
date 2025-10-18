@@ -2,8 +2,17 @@ const { app, Tray, Menu } = require('electron')
 const fs = require('fs')
 const path = require('path')
 
+function getTrayIconPath() {
+    let iconPath = path.join(app.getAppPath(), 'assets', 'confetti.png');
+    if (iconPath.includes('app.asar')) {
+        iconPath = iconPath.replace('app.asar', 'app.asar.unpacked');
+    }
+    return iconPath;
+}
+
 function setupTray(windows) {
-    const tray = new Tray('confetti.png')
+    const iconPath = getTrayIconPath();
+    const tray = new Tray(iconPath);
 
     // Build Samples submenu from ./samples/*.json
     const samplesDir = path.join(__dirname, 'samples')

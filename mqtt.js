@@ -17,18 +17,22 @@ function setupMqtt(windows, usr) {
     rejectUnauthorized: true
   })
 
-  const topic = `confetti/${usr}`
+  const itemCompletedTopic = `confetti/${usr}/item-completed`
+  const sprintCompletedTopic = `confetti/${usr}/sprint-completed`
+
 
   client.on('connect', () => {
-    console.log(`Connected to ${mqttConfig.host}. Subscribing to topic:`, topic)
-    client.subscribe(topic)
+    console.log(`Connected to ${mqttConfig.host}. Subscribing to topics:`, itemCompletedTopic, sprintCompletedTopic)
+    client.subscribe(itemCompletedTopic)
+    client.subscribe(sprintCompletedTopic)
+    client.publish(`confetti/${usr}/checked-in`)
   })
 
   client.on('error', err => console.error('MQTT Connection Error:', err))
   
 
   client.on('message', (t, message) => {
-    if (t !== topic) return
+    if (t !== itemCompletedTopic && t !== sprintCompletedTopic) return
 
     console.log('Confetti trigger received')
     let confettiOptions = {}

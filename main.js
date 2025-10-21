@@ -57,13 +57,13 @@ app.whenReady().then(() => {
   }
   createWindows()
   tray = setupTray(windows)
+    
   windows.forEach(w => {
     w.webContents.on('did-finish-load', () => {
-      console.log('Window finished loading, sending initial launch-confetti')
-      w.webContents.send('launch-confetti')
-      console.log('Initial launch-confetti sent')
+      console.log('Window finished loading.')
     })
   })
+
   setupMqtt(windows, username)
   // setupMqttPublic(windows, username)
 })

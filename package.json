@@ -1,6 +1,6 @@
 {
   "name": "desktop-confetti",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "author": "Jeremiah Fischer <fischgeek@gmail.com>",
   "description": "Desktop app to trigger confetti effects",
   "main": "main.js",
@@ -33,8 +33,22 @@
       "!**/locales/**"
     ],
     "win": {
-      "target": "nsis",
+      "target": {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
       "icon": "assets/confetti.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": true,
+      "allowElevation": false,
+      "installerIcon": "assets/confetti.ico",
+      "uninstallerIcon": "assets/confetti.ico",
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": false,
+      "runAfterFinish": true,
+      "include": "installer.nsh"
     },
     "mac": {
       "target": "dmg",

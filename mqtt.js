@@ -25,7 +25,18 @@ function setupMqtt(windows, usr) {
     console.log(`Connected to ${mqttConfig.host}. Subscribing to topics:`, itemCompletedTopic, sprintCompletedTopic)
     client.subscribe(itemCompletedTopic)
     client.subscribe(sprintCompletedTopic)
-    client.publish(`confetti/${usr}/checked-in`)
+    
+    // Publish check-in message
+    const checkInTopic = `confetti/${usr}/check-in`
+    const timestamp = new Date().toLocaleString()
+    console.log('Publishing check-in to topic:', checkInTopic)
+    client.publish(checkInTopic, timestamp, (err) => {
+      if (err) {
+        console.error('Failed to publish check-in:', err)
+      } else {
+        console.log('Check-in published successfully to:', checkInTopic, 'with timestamp:', timestamp)
+      }
+    })
   })
 
   client.on('error', err => console.error('MQTT Connection Error:', err))

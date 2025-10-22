@@ -40,17 +40,26 @@ function parseShapes(shapes) {
 function launchConfetti(payload = {}) {
     if (!confetti) return
 
+    // Helper function to process shapes in any confetti options
+    const processShapes = (opts) => {
+        if (opts.shapes) {
+            return { ...opts, shapes: parseShapes(opts.shapes) }
+        }
+        return opts
+    }
+
     // 1. Realistic: { count, defaults, fires: [ { particleRatio, opts } ] }
     if (payload.count && Array.isArray(payload.fires)) {
         const count = payload.count
-        const defaults = payload.defaults || {}
+        const defaults = processShapes(payload.defaults || {})
         // If fires are in {particleRatio, opts} form
         if (payload.fires.every(f => typeof f.particleRatio === 'number' && f.opts)) {
             payload.fires.forEach(fire => {
+                const processedOpts = processShapes(fire.opts)
                 confetti({
                     ...defaultConfetti,
                     ...defaults,
-                    ...fire.opts,
+                    ...processedOpts,
                     particleCount: Math.floor(count * fire.particleRatio)
                 })
             })
@@ -60,7 +69,7 @@ function launchConfetti(payload = {}) {
 
     // 2. Starburst: { defaults, fires: [ { ...opts } ], repeat, repeatDelay }
     if (Array.isArray(payload.fires) && payload.defaults) {
-        const defaults = payload.defaults
+        const defaults = processShapes(payload.defaults)
         const fires = payload.fires
         const repeat = Number.isFinite(payload.repeat) ? payload.repeat : 1
         const repeatDelay = payload.repeatDelay
@@ -92,10 +101,11 @@ function launchConfetti(payload = {}) {
             setTimeout(() => {
                 fires.forEach(fireOpts => {
                     const resolved = resolveRangesShallow(fireOpts)
+                    const processedResolved = processShapes(resolved)
                     confetti({
                         ...defaultConfetti,
                         ...defaults,
-                        ...resolved
+                        ...processedResolved
                     })
                 })
             }, scheduleAt)
@@ -104,7 +114,8 @@ function launchConfetti(payload = {}) {
     }
 
     // Fallback: single burst
-    confetti({ ...defaultConfetti, ...payload })
+    const processedPayload = processShapes(payload)
+    confetti({ ...defaultConfetti, ...processedPayload })
 }
 
 module.exports = { initConfetti, launchConfetti }

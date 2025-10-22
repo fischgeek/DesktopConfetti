@@ -1,0 +1,95 @@
+{
+    "defaults": {
+        "spread": 60,
+        "ticks": 200,
+        "gravity": 1.2,
+        "startVelocity": 80,
+        "decay": 0.96,
+        "colors": [
+            "#FF5733",
+            "#FFC300",
+            "#DAF7A6",
+            "#C70039"
+        ],
+        "origin": {
+            "x": 0.0,
+            "y": 1
+        }
+    },
+    "fires": [
+        {
+            "particleCount": 60,
+            "scalar": 1.1,
+            "shapes": [
+                "circle"
+            ],
+            "origin": {
+                "x": 0,
+                "y": 1
+            },
+            "angle": 60
+        },
+        {
+            "particleCount": 40,
+            "scalar": 0.9,
+            "shapes": [
+                "square"
+            ],
+            "origin": {
+                "x": 0,
+                "y": 1
+            },
+            "angle": 60
+        },
+        {
+            "particleCount": 20,
+            "scalar": 1,
+            "shapes": [
+                "star"
+            ],
+            "origin": {
+                "x": 0,
+                "y": 1
+            },
+            "angle": 60
+        },
+        {
+            "particleCount": 60,
+            "scalar": 1.1,
+            "shapes": [
+                "circle"
+            ],
+            "origin": {
+                "x": 1,
+                "y": 1
+            },
+            "angle": 120
+        },
+        {
+            "particleCount": 40,
+            "scalar": 0.9,
+            "shapes": [
+                "square"
+            ],
+            "origin": {
+                "x": 1,
+                "y": 1
+            },
+            "angle": 120
+        },
+        {
+            "particleCount": 20,
+            "scalar": 1,
+            "shapes": [
+                "star"
+            ],
+            "origin": {
+                "x": 1,
+                "y": 1
+            },
+            "angle": 120
+        }
+    ],
+    "repeat": 25,
+    "repeatDelay": 200
+}

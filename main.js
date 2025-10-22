@@ -42,16 +42,21 @@ function createWindows() {
       }
     })
     
-    // Basic window setup - detailed management will be handled by WindowManager
     win.setAlwaysOnTop(true, 'screen-saver', 1)
     win.setIgnoreMouseEvents(true)
+    
+    win.on('blur', () => {
+      setTimeout(() => {
+        win.setAlwaysOnTop(true, 'screen-saver', 1)
+      }, 100)
+    })
+    
     // win.webContents.openDevTools()
     // win.setBackgroundColor('black')
     win.loadFile('index.html')
     windows.push(win)
   })
 }
-
 
 app.whenReady().then(() => {
   // Ensure Windows uses our appId for taskbar grouping and icon
@@ -69,4 +74,13 @@ app.whenReady().then(() => {
 
   setupMqtt(windows, username)
   // setupMqttPublic(windows, username)
+  
+  // Timer-based always-on-top enforcement every minute
+  setInterval(() => {
+    windows.forEach(win => {
+      if (win && !win.isDestroyed()) {
+        win.setAlwaysOnTop(true, 'screen-saver', 1)
+      }
+    })
+  }, 60000) // 60 seconds = 1 minute
 })

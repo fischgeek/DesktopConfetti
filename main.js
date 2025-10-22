@@ -34,13 +34,16 @@ function createWindows() {
       alwaysOnTop: true,
       skipTaskbar: true,
       fullscreen: true,
+      focusable: false,
       icon: getWindowIconPath(),
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
       }
     })
-    win.setAlwaysOnTop(true, 'screen-saver')
+    
+    // Basic window setup - detailed management will be handled by WindowManager
+    win.setAlwaysOnTop(true, 'screen-saver', 1)
     win.setIgnoreMouseEvents(true)
     // win.webContents.openDevTools()
     // win.setBackgroundColor('black')

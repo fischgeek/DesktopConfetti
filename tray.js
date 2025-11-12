@@ -18,9 +18,16 @@ function setupTray(windows) {
     const samplesDir = path.join(__dirname, 'samples')
     let sampleItems = []
     try {
+        const excludedFiles = [
+            'fireworks.json',
+            'starburst.json',
+            'bottom_corners_shower.json'
+        ]
+        
         const files = fs
             .readdirSync(samplesDir)
             .filter(f => f.toLowerCase().endsWith('.json'))
+            .filter(f => !excludedFiles.includes(f)) // Filter out excluded files
 
         const toTitle = (name) => name.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 

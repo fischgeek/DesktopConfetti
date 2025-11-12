@@ -2,7 +2,7 @@ const { app, BrowserWindow, screen, Tray, Menu, ipcMain } = require('electron')
 // const express = require('express')
 const { setupTray } = require('./tray')
 const path = require('path')
-const { setupMqtt, setupMqttPublic } = require('./mqtt.js')
+const { setupMqtt, setupMqttPublic, sendCheckIn } = require('./mqtt.js')
 // const mqtt = require('mqtt')
 // const serverApp = express()
 const os = require('os')
@@ -10,6 +10,26 @@ const username = os.userInfo().username
 let tray = null
 let windows = []
 console.log('Current user:', username)
+
+// Prevent multiple instances
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  console.log('Another instance is already running. Exiting...')
+  app.quit()
+} else {
+  // Handle when user tries to open a second instance
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    console.log('Second instance attempted, focusing existing windows')
+    // Focus existing windows if they exist
+    windows.forEach(win => {
+      if (win) {
+        if (win.isMinimized()) win.restore()
+        win.focus()
+      }
+    })
+  })
+}
 
 function createWindows() {
   const displays = screen.getAllDisplays()
@@ -35,6 +55,9 @@ function createWindows() {
       skipTaskbar: true,
       fullscreen: true,
       focusable: false,
+      resizable: false,
+      minimizable: false,
+      closable: false,
       icon: getWindowIconPath(),
       webPreferences: {
         nodeIntegration: true,
@@ -42,13 +65,23 @@ function createWindows() {
       }
     })
     
-    win.setAlwaysOnTop(true, 'screen-saver', 1)
+    // Set the highest possible window level to resist Win+D
+    win.setAlwaysOnTop(true, 'pop-up-menu', 1)
     win.setIgnoreMouseEvents(true)
+    win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
     
     win.on('blur', () => {
-      setTimeout(() => {
-        win.setAlwaysOnTop(true, 'screen-saver', 1)
-      }, 100)
+      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+    })
+    
+    win.on('hide', () => {
+      win.show()
+      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+    })
+    
+    win.on('minimize', () => {
+      win.restore()
+      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
     })
     
     // win.webContents.openDevTools()
@@ -57,6 +90,7 @@ function createWindows() {
     windows.push(win)
   })
 }
+
 
 app.whenReady().then(() => {
   // Ensure Windows uses our appId for taskbar grouping and icon
@@ -80,7 +114,8 @@ app.whenReady().then(() => {
     windows.forEach(win => {
       if (win && !win.isDestroyed()) {
         win.setAlwaysOnTop(true, 'screen-saver', 1)
+        sendCheckIn(username)
       }
     })
-  }, 60000) // 60 seconds = 1 minute
+  }, 60000)
 })

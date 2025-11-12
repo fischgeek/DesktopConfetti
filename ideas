@@ -6,3 +6,6 @@
 
 * ? after x number of transitions
 * leader boards for opened/transitioned/completed task of the (day/week/month)
+
+* see/set mqtt topics
+* see/set desired confetti animation

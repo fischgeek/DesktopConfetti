@@ -46,6 +46,7 @@ function setupMqtt(windows, usr) {
     if (t !== itemCompletedTopic && t !== sprintCompletedTopic) return
 
     console.log('Confetti trigger received')
+    sendTriggerTimestamp(usr)
     let confettiOptions = {}
 
     try {
@@ -105,4 +106,34 @@ function setupMqttPublic(windows, usr) {
   return client2
 }
 
-module.exports = { setupMqtt, setupMqttPublic }
+function sendCheckIn(usr) {
+  if (!client) return
+
+  const checkInTopic = `confetti/${usr}/check-in`
+  const timestamp = new Date().toLocaleString()
+  console.log('Publishing sendCheckIn to topic:', checkInTopic)
+  client.publish(checkInTopic, timestamp, (err) => {
+    if (err) {
+      console.error('Failed to publish sendCheckIn:', err)
+    } else {
+      console.log('sendCheckIn published successfully to:', checkInTopic, 'with timestamp:', timestamp)
+    }
+  })
+}
+
+function sendTriggerTimestamp(usr) {
+  if (!client) return
+
+  const triggerTopic = `confetti/${usr}/triggered`
+  const timestamp = new Date().toLocaleString()
+  console.log('Publishing sendTriggerTimestamp to topic:', triggerTopic)
+  client.publish(triggerTopic, timestamp, (err) => {
+    if (err) {
+      console.error('Failed to publish sendTriggerTimestamp:', err)
+    } else {
+      console.log('sendTriggerTimestamp published successfully to:', triggerTopic, 'with timestamp:', timestamp)
+    }
+  })
+}
+
+module.exports = { setupMqtt, setupMqttPublic, sendCheckIn, sendTriggerTimestamp }

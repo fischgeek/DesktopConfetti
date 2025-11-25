@@ -66,22 +66,24 @@ function createWindows() {
     })
     
     // Set the highest possible window level to resist Win+D
-    win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+    win.setAlwaysOnTop(true, 'screen-saver', 1)
     win.setIgnoreMouseEvents(true)
     win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
     
     win.on('blur', () => {
-      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+      setTimeout(() => {
+        win.setAlwaysOnTop(true, 'screen-saver', 1)
+      }, 100)
     })
     
     win.on('hide', () => {
       win.show()
-      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+      win.setAlwaysOnTop(true, 'screen-saver', 1)
     })
     
     win.on('minimize', () => {
       win.restore()
-      win.setAlwaysOnTop(true, 'pop-up-menu', 1)
+      win.setAlwaysOnTop(true, 'screen-saver', 1)
     })
     
     // win.webContents.openDevTools()
@@ -118,4 +120,21 @@ app.whenReady().then(() => {
       }
     })
   }, 60000)
+})
+
+// Quit when all windows are closed (except on macOS)
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+// Handle app quit properly
+app.on('before-quit', () => {
+  // Close all windows to ensure clean exit
+  windows.forEach(win => {
+    if (win && !win.isDestroyed()) {
+      win.destroy()
+    }
+  })
 })

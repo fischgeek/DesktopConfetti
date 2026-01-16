@@ -134,7 +134,9 @@ app.on('before-quit', () => {
   // Close all windows to ensure clean exit
   windows.forEach(win => {
     if (win && !win.isDestroyed()) {
+      win.removeAllListeners()
       win.destroy()
     }
   })
+  windows = []
 })

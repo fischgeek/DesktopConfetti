@@ -22,7 +22,7 @@
     ],
     "appId": "com.desktop-confetti",
     "productName": "DesktopConfetti",
-  "icon": "assets/confetti",
+    "icon": "assets/confetti",
     "electronLanguages": [
       "en-US"
     ],

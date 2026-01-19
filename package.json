@@ -1,6 +1,6 @@
 {
   "name": "desktop-confetti",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "Jeremiah Fischer <fischgeek@gmail.com>",
   "description": "Desktop app to trigger confetti effects",
   "main": "main.js",

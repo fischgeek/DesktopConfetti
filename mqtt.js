@@ -14,7 +14,7 @@ function setupMqtt(windows, usr) {
     port: mqttConfig.port,
     username: mqttConfig.username,
     password: mqttConfig.password,
-    rejectUnauthorized: true
+    rejectUnauthorized: mqttConfig.rejectUnauthorized
   })
 
   const itemCompletedTopic = `confetti/${usr}/item-completed`

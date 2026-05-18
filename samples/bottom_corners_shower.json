@@ -13,7 +13,7 @@
         ],
         "origin": {
             "x": 0.0,
-            "y": 1
+            "y": -0.05
         }
     },
     "fires": [
@@ -25,9 +25,9 @@
             ],
             "origin": {
                 "x": 0,
-                "y": 1
+                "y": 0
             },
-            "angle": 60
+            "angle": 320
         },
         {
             "particleCount": 40,
@@ -37,9 +37,9 @@
             ],
             "origin": {
                 "x": 0,
-                "y": 1
+                "y": 0
             },
-            "angle": 60
+            "angle": 320
         },
         {
             "particleCount": 20,
@@ -49,9 +49,9 @@
             ],
             "origin": {
                 "x": 0,
-                "y": 1
+                "y": 0
             },
-            "angle": 60
+            "angle": 320
         },
         {
             "particleCount": 60,
@@ -61,9 +61,9 @@
             ],
             "origin": {
                 "x": 1,
-                "y": 1
+                "y": 0
             },
-            "angle": 120
+            "angle": 220
         },
         {
             "particleCount": 40,
@@ -73,9 +73,9 @@
             ],
             "origin": {
                 "x": 1,
-                "y": 1
+                "y": 0
             },
-            "angle": 120
+            "angle": 220
         },
         {
             "particleCount": 20,
@@ -85,9 +85,9 @@
             ],
             "origin": {
                 "x": 1,
-                "y": 1
+                "y": 0
             },
-            "angle": 120
+            "angle": 220
         }
     ],
     "repeat": 25,

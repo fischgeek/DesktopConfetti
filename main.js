@@ -64,6 +64,27 @@ function createWindows() {
         contextIsolation: false
       }
     })
+
+    // const win = new BrowserWindow({
+    //   x: display.bounds.x,
+    //   y: display.bounds.y,
+    //   width: display.bounds.width,
+    //   height: display.bounds.height,
+    //   transparent: false,
+    //   frame: true,
+    //   alwaysOnTop: false,
+    //   skipTaskbar: false,
+    //   fullscreen: false,
+    //   focusable: true,
+    //   resizable: true,
+    //   minimizable: true,
+    //   closable: true,
+    //   icon: getWindowIconPath(),
+    //   webPreferences: {
+    //     nodeIntegration: true,
+    //     contextIsolation: false
+    //   }
+    // })
     
     // Set the highest possible window level to resist Win+D
     win.setAlwaysOnTop(true, 'screen-saver', 1)
@@ -134,7 +155,9 @@ app.on('before-quit', () => {
   // Close all windows to ensure clean exit
   windows.forEach(win => {
     if (win && !win.isDestroyed()) {
+      win.removeAllListeners()
       win.destroy()
     }
   })
+  windows = []
 })

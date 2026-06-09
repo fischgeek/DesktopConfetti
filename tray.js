@@ -22,7 +22,8 @@ function setupTray(windows) {
         const excludedFiles = [
             'fireworks.json',
             'starburst.json',
-            'bottom_corners_shower.json'
+            'bottom_corners_shower.json',
+            'item_transitioned.json'
         ]
         
         const files = fs
@@ -79,12 +80,12 @@ function setupTray(windows) {
             checked: triggers['twenty-items-completed'],
             click: () => toggleTrigger('twenty-items-completed')
         },
-        {
-            label: 'Item Transitioned',
-            type: 'checkbox',
-            checked: triggers['item-transitioned'],
-            click: () => toggleTrigger('item-transitioned')
-        },
+        // {
+        //     label: 'Item Transitioned',
+        //     type: 'checkbox',
+        //     checked: triggers['item-transitioned'],
+        //     click: () => toggleTrigger('item-transitioned')
+        // },
         {
             label: 'Sprint Completed',
             type: 'checkbox',
@@ -94,13 +95,8 @@ function setupTray(windows) {
     ]
 
     const contextMenu = Menu.buildFromTemplate([
-        // {
-        //     label: 'Fire Confetti',
-        //     click: () =>
-        //         windows.forEach(w => {
-        //             w.webContents.send('launch-confetti')
-        //         })
-        // },
+        { label: `v${app.getVersion()}`, enabled: false },
+        { type: 'separator' },
         ...(sampleItems.length ? [{ label: 'Confetti Samples', submenu: sampleItems }] : []),
         { type: 'separator' },
         { label: 'Trigger Settings', submenu: triggerItems },
@@ -108,7 +104,6 @@ function setupTray(windows) {
         {
             label: 'Restart App',
             click: () => {
-                // Relaunch the Electron app with the same arguments
                 app.relaunch()
                 app.exit(0)
             }

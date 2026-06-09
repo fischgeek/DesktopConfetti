@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"c:\\\\dev\\\\DesktopConfetti\" -Recurse -Force | Where-Object { $_.FullName -notmatch \"node_modules|dist|\\\\.git\" } | Select-Object FullName, PSIsContainer | Format-Table -AutoSize)"
+    ]
+  }
+}

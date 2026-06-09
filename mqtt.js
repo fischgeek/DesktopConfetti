@@ -1,6 +1,7 @@
 const mqtt = require('mqtt')
 const mqttConfig = require('./mqtt_config.js')
 const mqttConfigPublic = require('./mqtt_config_public.js')
+const { loadConfig } = require('./config')
 
 let client = null
 let client2 = null
@@ -18,12 +19,14 @@ function setupMqtt(windows, usr) {
   })
 
   const itemCompletedTopic = `confetti/${usr}/item-completed`
+  const itemTransitionedTopic = `confetti/${usr}/item-transitioned`
   const sprintCompletedTopic = `confetti/${usr}/sprint-completed`
 
 
   client.on('connect', () => {
-    console.log(`Connected to ${mqttConfig.host}. Subscribing to topics:`, itemCompletedTopic, sprintCompletedTopic)
+    console.log(`Connected to ${mqttConfig.host}. Subscribing to topics:`, itemCompletedTopic, itemTransitionedTopic, sprintCompletedTopic)
     client.subscribe(itemCompletedTopic)
+    client.subscribe(itemTransitionedTopic)
     client.subscribe(sprintCompletedTopic)
     
     // Publish check-in message
@@ -43,23 +46,38 @@ function setupMqtt(windows, usr) {
   
 
   client.on('message', (t, message) => {
-    if (t !== itemCompletedTopic && t !== sprintCompletedTopic) return
+    if (t !== itemCompletedTopic && t !== itemTransitionedTopic && t !== sprintCompletedTopic) return
 
-    console.log('Confetti trigger received')
-    sendTriggerTimestamp(usr)
+    console.log('Confetti trigger received on topic:', t)
     let confettiOptions = {}
 
     try {
       confettiOptions = JSON.parse(message.toString())
       console.log('Parsed confetti options:', confettiOptions)
-      // console.log('Random options: ', confettiOptions.fires[0].opts.spread)
     } catch (e) {
       console.error('Invalid MQTT payload:', e)
     }
 
+    // Load config and check if this trigger type is enabled
+    const config = loadConfig()
+    let triggerKey
+    if (t === itemCompletedTopic) {
+      triggerKey = 'item-completed'
+    } else if (t === itemTransitionedTopic) {
+      triggerKey = 'item-transitioned'
+    } else {
+      triggerKey = 'sprint-completed'
+    }
+    
+    if (!config.triggers[triggerKey]) {
+      console.log('Trigger disabled in config:', triggerKey)
+      return
+    }
+
+    sendTriggerTimestamp(usr)
     windows.forEach(w => {
       if (w && !w.isDestroyed()) {
-        console.log('Sending launch-confetti to window with options:', confettiOptions)
+        console.log('Sending launch-confetti with options:', confettiOptions)
         w.webContents.send('launch-confetti', confettiOptions)
       }
     })

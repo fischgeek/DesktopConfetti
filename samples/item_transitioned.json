@@ -1,0 +1,13 @@
+{
+"particleCount": 50,
+"spread": 20,
+"angle": 90,
+"startVelocity": 30,
+"decay": 0.92,
+"ticks": 75,
+"gravity": 1,
+"origin": { "x": 0.5, "y": 0.5 },
+"scalar": 0.6,
+"shapes": ["circle"],
+"colors": ["#4D96FF", "#2E8BFF", "#6BCBFF"]
+}

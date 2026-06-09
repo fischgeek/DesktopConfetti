@@ -1,6 +1,7 @@
 const { app, Tray, Menu } = require('electron')
 const fs = require('fs')
 const path = require('path')
+const { loadConfig, toggleTrigger } = require('./config')
 
 function getTrayIconPath() {
     let iconPath = path.join(app.getAppPath(), 'assets', 'confetti.png');
@@ -21,7 +22,8 @@ function setupTray(windows) {
         const excludedFiles = [
             'fireworks.json',
             'starburst.json',
-            'bottom_corners_shower.json'
+            'bottom_corners_shower.json',
+            'item_transitioned.json'
         ]
         
         const files = fs
@@ -55,19 +57,53 @@ function setupTray(windows) {
         console.error('Unable to build Samples menu:', e)
     }
 
-    const contextMenu = Menu.buildFromTemplate([
+    // Load current config
+    const config = loadConfig()
+    const triggers = config.triggers
+
+    const triggerItems = [
+        {
+            label: 'Item Completed',
+            type: 'checkbox',
+            checked: triggers['item-completed'],
+            click: () => toggleTrigger('item-completed')
+        },
+        {
+            label: '10 Items Completed',
+            type: 'checkbox',
+            checked: triggers['ten-items-completed'],
+            click: () => toggleTrigger('ten-items-completed')
+        },
+        {
+            label: '20 Items Completed',
+            type: 'checkbox',
+            checked: triggers['twenty-items-completed'],
+            click: () => toggleTrigger('twenty-items-completed')
+        },
         // {
-        //     label: 'Fire Confetti',
-        //     click: () =>
-        //         windows.forEach(w => {
-        //             w.webContents.send('launch-confetti')
-        //         })
+        //     label: 'Item Transitioned',
+        //     type: 'checkbox',
+        //     checked: triggers['item-transitioned'],
+        //     click: () => toggleTrigger('item-transitioned')
         // },
-        ...(sampleItems.length ? [{ label: 'Confetti', submenu: sampleItems }] : []),
+        {
+            label: 'Sprint Completed',
+            type: 'checkbox',
+            checked: triggers['sprint-completed'],
+            click: () => toggleTrigger('sprint-completed')
+        }
+    ]
+
+    const contextMenu = Menu.buildFromTemplate([
+        { label: `v${app.getVersion()}`, enabled: false },
+        { type: 'separator' },
+        ...(sampleItems.length ? [{ label: 'Confetti Samples', submenu: sampleItems }] : []),
+        { type: 'separator' },
+        { label: 'Trigger Settings', submenu: triggerItems },
+        { type: 'separator' },
         {
             label: 'Restart App',
             click: () => {
-                // Relaunch the Electron app with the same arguments
                 app.relaunch()
                 app.exit(0)
             }
